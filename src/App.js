@@ -16,15 +16,17 @@ function App() {
     })
   }, []);
  
-  const addTodo = (event) => {
+  const addTodo = async (event) => {
     // this will fire off when we click the button
     event.preventDefault(); // stops refresh after clicking add todo button
-    
-    db.collection('todos').add({
-      todo: input,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    })
-    
+    if(input.trim()) {
+      await db.collection('todos').add({
+        todo: input,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      
+    }
+
     setInput(""); // clear up the input after clicking add todo button 
   }
 
@@ -42,13 +44,12 @@ function App() {
       </Button>
 
       </form>
-     
-      <ul>
+      {todos.length <= 0 ? <h1 className='empty_todo'>You don't have a todo yet</h1> : <ul> 
         {todos.map(todo => (
-          <Todo todo={todo}/>
+          <Todo todo={todo} />
         ))}
       </ul>
-    
+      }
     </div>
   );
 }
